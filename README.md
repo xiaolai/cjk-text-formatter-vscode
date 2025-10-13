@@ -132,17 +132,6 @@ After:  한국어 English 혼합 text 입니다
 
 Or: Extensions → Search "CJK Text Formatter" → Install
 
-## Development
-
-```bash
-npm install          # Install dependencies
-npm run compile      # Build
-npm run watch        # Watch mode
-./testing/install.sh # Local testing
-```
-
-See `testing/` directory for test files and scripts.
-
 ## Credits
 
 Ported from [cjk-text-formatter](https://github.com/xiaolai/cjk-text-formatter) by Xiaolai Li.
