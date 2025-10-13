@@ -28,7 +28,6 @@ const ELLIPSIS_PATTERN = /\s*\.\s+\.\s+\.(?:\s+\.)*/g;
 const ELLIPSIS_SPACING_PATTERN = /\.\.\.\s*(?=\S)/g;
 const CURRENCY_SPACING_PATTERN = /([$¥€£₹]|USD|CNY|EUR|GBP)\s+(\d)/g;
 const SLASH_SPACING_PATTERN = /(?<![/:])\s*\/\s*(?!\/)/g;
-const MULTI_SPACE_PATTERN = /(\S) {2,}/g;
 const TRAILING_SPACE_PATTERN = / +$/gm;
 const EXCESSIVE_NEWLINE_PATTERN = /\n{3,}/g;
 
@@ -253,6 +252,31 @@ function spaceBetween(text: string): string {
 }
 
 /**
+ * Collapse multiple spaces while preserving markdown list indentation
+ */
+function collapseSpaces(text: string): string {
+    const lines = text.split('\n');
+    const processedLines = lines.map(line => {
+        // Skip processing for lines that are list items or start with indentation
+        // List markers: -, *, +, or numbers followed by . or )
+        const listItemPattern = /^(\s*)([-*+]|\d+[.)])(\s+)(.*)$/;
+        const match = line.match(listItemPattern);
+
+        if (match) {
+            const [, indent, marker, , content] = match;
+            // Preserve indentation and marker with exactly one space, then collapse spaces in content
+            const processedContent = content.replace(/(\S) {2,}/g, '$1 ');
+            return indent + marker + ' ' + processedContent;
+        }
+
+        // For non-list lines, collapse multiple spaces but preserve leading indentation
+        return line.replace(/(\S) {2,}/g, '$1 ');
+    });
+
+    return processedLines.join('\n');
+}
+
+/**
  * Main formatting function
  */
 export function formatText(text: string, config?: RuleConfig): string {
@@ -322,8 +346,8 @@ export function formatText(text: string, config?: RuleConfig): string {
 
         // Cleanup rules
         if (rules.spaceCollapsing) {
-            // Match non-space + 2+ spaces to preserve leading indentation
-            text = text.replace(MULTI_SPACE_PATTERN, '$1 ');
+            // Use the improved space collapsing function that preserves list indentation
+            text = collapseSpaces(text);
         }
 
         // Remove trailing spaces at end of lines
