@@ -2,6 +2,28 @@
 
 All notable changes to the "CJK Text Formatter" extension will be documented in this file.
 
+## [1.0.4] - 2025-10-14
+
+### Added
+- **Custom Rules**: Define your own regex-based formatting rules
+  - Add custom rules via `cjkFormatter.customRules` setting
+  - Support for pattern matching with capture groups
+  - Applied after all built-in rules
+  - Enable/disable individual custom rules
+  - Comprehensive error handling for invalid patterns
+- Example custom rules for:
+  - Unicode arrows (→ ← ↔)
+  - Unicode fractions (½ ⅓ ¼)
+  - Multiplication signs (×)
+  - Temperature symbols (°C °F)
+- Detailed documentation with examples in README
+
+### Technical
+- Added `CustomRule` interface to formatter
+- Added `applyCustomRules()` function with error handling
+- Extended configuration schema in package.json
+- Comprehensive test suite for custom rules
+
 ## [1.0.3] - 2025-10-14
 
 ### Changed

@@ -79,6 +79,154 @@ All formatting rules can be toggled individually in VS Code settings:
 | `slashSpacing` | Remove spaces around slashes | `A / B` → `A/B` |
 | `spaceCollapsing` | Collapse multiple spaces to single space | `word  word` → `word word` |
 
+## Custom Rules
+
+Define your own regex-based formatting rules to extend the formatter's capabilities. Custom rules are applied **after** all built-in rules.
+
+### Configuration
+
+Add custom rules in your VS Code `settings.json`:
+
+```json
+{
+  "cjkFormatter.customRules": [
+    {
+      "name": "unicode_arrows",
+      "pattern": "\\s*->\\s*",
+      "replacement": " → ",
+      "description": "Use Unicode right arrow",
+      "enabled": true
+    },
+    {
+      "name": "multiplication_sign",
+      "pattern": "(\\d+)\\s*x\\s*(\\d+)",
+      "replacement": "$1×$2",
+      "description": "Use proper multiplication sign between numbers"
+    }
+  ]
+}
+```
+
+### Rule Structure
+
+Each custom rule requires:
+
+- **`name`** (required): Unique identifier for the rule
+- **`pattern`** (required): Regular expression pattern to match
+- **`replacement`** (required): Replacement string (use `$1`, `$2` for capture groups)
+- **`description`** (optional): Human-readable description
+- **`enabled`** (optional): Whether the rule is active (default: `true`)
+
+### Common Examples
+
+#### Unicode Arrows
+
+```json
+{
+  "cjkFormatter.customRules": [
+    {
+      "name": "right_arrow",
+      "pattern": "\\s*->\\s*",
+      "replacement": " → "
+    },
+    {
+      "name": "left_arrow",
+      "pattern": "\\s*<-\\s*",
+      "replacement": " ← "
+    },
+    {
+      "name": "bidirectional_arrow",
+      "pattern": "\\s*<->\\s*",
+      "replacement": " ↔ "
+    }
+  ]
+}
+```
+
+**Input:** `A -> B <- C <-> D`
+**Output:** `A → B ← C ↔ D`
+
+#### Unicode Fractions
+
+```json
+{
+  "cjkFormatter.customRules": [
+    {
+      "name": "fraction_half",
+      "pattern": "\\b1/2\\b",
+      "replacement": "½"
+    },
+    {
+      "name": "fraction_third",
+      "pattern": "\\b1/3\\b",
+      "replacement": "⅓"
+    },
+    {
+      "name": "fraction_quarter",
+      "pattern": "\\b1/4\\b",
+      "replacement": "¼"
+    }
+  ]
+}
+```
+
+**Input:** `Mix 1/2 cup, 1/3 tsp, 1/4 oz`
+**Output:** `Mix ½ cup, ⅓ tsp, ¼ oz`
+
+#### Multiplication Sign
+
+```json
+{
+  "cjkFormatter.customRules": [
+    {
+      "name": "multiplication",
+      "pattern": "(\\d+)\\s*x\\s*(\\d+)",
+      "replacement": "$1×$2"
+    }
+  ]
+}
+```
+
+**Input:** `计算 10 x 20 结果`
+**Output:** `计算 10×20 结果`
+
+#### Temperature Symbols
+
+```json
+{
+  "cjkFormatter.customRules": [
+    {
+      "name": "celsius",
+      "pattern": "(\\d+)\\s*C\\b",
+      "replacement": "$1°C"
+    },
+    {
+      "name": "fahrenheit",
+      "pattern": "(\\d+)\\s*F\\b",
+      "replacement": "$1°F"
+    }
+  ]
+}
+```
+
+**Input:** `温度 25 C 或 77 F`
+**Output:** `温度 25°C 或 77°F`
+
+### Tips
+
+- **Test your patterns**: Use a regex tester before adding rules
+- **Escape special characters**: Use `\\` for backslash in JSON strings
+- **Use word boundaries**: `\\b` to match whole words only
+- **Capture groups**: Use `$1`, `$2`, etc. in replacements for captured text
+- **Execution order**: Custom rules run in the order defined
+- **Disable temporarily**: Set `"enabled": false` to keep rule but disable it
+
+### Error Handling
+
+- Invalid regex patterns are automatically skipped with a warning
+- Rules with missing required fields (`name`, `pattern`, `replacement`) are ignored
+- The formatter continues to work even if some custom rules fail
+
 ## Examples
 
 ### Chinese (中文)

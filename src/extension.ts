@@ -12,22 +12,24 @@ let statusBarItem: vscode.StatusBarItem;
  * Read formatter configuration from VS Code settings
  */
 function getFormatterConfig(): RuleConfig {
-    const config = vscode.workspace.getConfiguration('cjkFormatter.rules');
+    const rulesConfig = vscode.workspace.getConfiguration('cjkFormatter.rules');
+    const mainConfig = vscode.workspace.getConfiguration('cjkFormatter');
 
     return {
-        ellipsisNormalization: config.get('ellipsisNormalization', true),
-        dashConversion: config.get('dashConversion', true),
-        emdashSpacing: config.get('emdashSpacing', true),
-        quoteSpacing: config.get('quoteSpacing', true),
-        singleQuoteSpacing: config.get('singleQuoteSpacing', true),
-        cjkEnglishSpacing: config.get('cjkEnglishSpacing', true),
-        fullwidthPunctuation: config.get('fullwidthPunctuation', true),
-        fullwidthParentheses: config.get('fullwidthParentheses', true),
-        fullwidthBrackets: config.get('fullwidthBrackets', false),
-        fullwidthAlphanumeric: config.get('fullwidthAlphanumeric', true),
-        currencySpacing: config.get('currencySpacing', true),
-        slashSpacing: config.get('slashSpacing', true),
-        spaceCollapsing: config.get('spaceCollapsing', true),
+        ellipsisNormalization: rulesConfig.get('ellipsisNormalization', true),
+        dashConversion: rulesConfig.get('dashConversion', true),
+        emdashSpacing: rulesConfig.get('emdashSpacing', true),
+        quoteSpacing: rulesConfig.get('quoteSpacing', true),
+        singleQuoteSpacing: rulesConfig.get('singleQuoteSpacing', true),
+        cjkEnglishSpacing: rulesConfig.get('cjkEnglishSpacing', true),
+        fullwidthPunctuation: rulesConfig.get('fullwidthPunctuation', true),
+        fullwidthParentheses: rulesConfig.get('fullwidthParentheses', true),
+        fullwidthBrackets: rulesConfig.get('fullwidthBrackets', false),
+        fullwidthAlphanumeric: rulesConfig.get('fullwidthAlphanumeric', true),
+        currencySpacing: rulesConfig.get('currencySpacing', true),
+        slashSpacing: rulesConfig.get('slashSpacing', true),
+        spaceCollapsing: rulesConfig.get('spaceCollapsing', true),
+        customRules: mainConfig.get('customRules', []),
     };
 }
 

@@ -2,7 +2,7 @@
   "name": "cjk-text-formatter",
   "displayName": "CJK Text Formatter",
   "description": "Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "lixiaolai",
   "icon": "icon.png",
   "engines": {
@@ -126,6 +126,38 @@
           "type": "boolean",
           "default": true,
           "description": "Show formatter status in status bar"
+        },
+        "cjkFormatter.customRules": {
+          "type": "array",
+          "default": [],
+          "description": "Custom regex-based formatting rules (applied after built-in rules)",
+          "items": {
+            "type": "object",
+            "required": ["name", "pattern", "replacement"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Rule identifier (e.g., 'unicode_arrows')"
+              },
+              "pattern": {
+                "type": "string",
+                "description": "Regular expression pattern to match"
+              },
+              "replacement": {
+                "type": "string",
+                "description": "Replacement string (use $1, $2 for capture groups)"
+              },
+              "description": {
+                "type": "string",
+                "description": "Human-readable description of what the rule does"
+              },
+              "enabled": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether this rule is enabled"
+              }
+            }
+          }
         }
       }
     }

@@ -31,6 +31,15 @@ const SLASH_SPACING_PATTERN = /(?<![/:])\s*\/\s*(?!\/)/g;
 const TRAILING_SPACE_PATTERN = / +$/gm;
 const EXCESSIVE_NEWLINE_PATTERN = /\n{3,}/g;
 
+// Custom rule interface
+export interface CustomRule {
+    name: string;
+    pattern: string;
+    replacement: string;
+    description?: string;
+    enabled?: boolean;
+}
+
 // Rule configuration interface
 export interface RuleConfig {
     ellipsisNormalization?: boolean;
@@ -46,6 +55,7 @@ export interface RuleConfig {
     currencySpacing?: boolean;
     slashSpacing?: boolean;
     spaceCollapsing?: boolean;
+    customRules?: CustomRule[];
 }
 
 /**
@@ -277,11 +287,44 @@ function collapseSpaces(text: string): string {
 }
 
 /**
+ * Apply custom regex rules to text
+ */
+function applyCustomRules(text: string, customRules?: CustomRule[]): string {
+    if (!customRules || customRules.length === 0) {
+        return text;
+    }
+
+    for (const rule of customRules) {
+        // Skip disabled rules
+        if (rule.enabled === false) {
+            continue;
+        }
+
+        // Validate required fields
+        if (!rule.name || !rule.pattern || rule.replacement === undefined) {
+            continue;
+        }
+
+        try {
+            // Compile and apply the regex pattern
+            const regex = new RegExp(rule.pattern, 'g');
+            text = text.replace(regex, rule.replacement);
+        } catch (error) {
+            // Skip rules with invalid regex patterns
+            console.warn(`Invalid regex pattern in custom rule "${rule.name}":`, error);
+            continue;
+        }
+    }
+
+    return text;
+}
+
+/**
  * Main formatting function
  */
 export function formatText(text: string, config?: RuleConfig): string {
     // Default: all rules enabled
-    const rules: Required<RuleConfig> = {
+    const rules: Required<Omit<RuleConfig, 'customRules'>> & Pick<RuleConfig, 'customRules'> = {
         ellipsisNormalization: true,
         dashConversion: true,
         emdashSpacing: true,
@@ -295,6 +338,7 @@ export function formatText(text: string, config?: RuleConfig): string {
         currencySpacing: true,
         slashSpacing: true,
         spaceCollapsing: true,
+        customRules: config?.customRules || [],
         ...config
     };
 
@@ -356,6 +400,9 @@ export function formatText(text: string, config?: RuleConfig): string {
 
     // Collapse excessive newlines (3+) to max 2 (one blank line)
     text = text.replace(EXCESSIVE_NEWLINE_PATTERN, '\n\n');
+
+    // Apply custom regex rules (runs after all built-in rules)
+    text = applyCustomRules(text, rules.customRules);
 
     return text.trim();
 }
