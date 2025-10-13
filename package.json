@@ -1,0 +1,160 @@
+{
+  "name": "cjk-formatter",
+  "displayName": "CJK Text Formatter",
+  "description": "Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules",
+  "version": "1.0.1",
+  "publisher": "xiaolai",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "cjk",
+    "chinese",
+    "japanese",
+    "korean",
+    "中文",
+    "日本語",
+    "한국어",
+    "formatter",
+    "typography",
+    "text",
+    "format",
+    "markdown",
+    "spacing",
+    "punctuation",
+    "mixed-language"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onLanguage:plaintext",
+    "onLanguage:html"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "cjk-formatter.formatDocument",
+        "title": "CJK: Format Document"
+      },
+      {
+        "command": "cjk-formatter.formatSelection",
+        "title": "CJK: Format Selection"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "cjk-formatter.formatDocument",
+        "key": "ctrl+shift+f",
+        "mac": "cmd+shift+f",
+        "when": "editorTextFocus && !editorReadonly"
+      }
+    ],
+    "configuration": {
+      "title": "CJK Formatter",
+      "properties": {
+        "cjkFormatter.formatOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically format on save"
+        },
+        "cjkFormatter.rules.ellipsisNormalization": {
+          "type": "boolean",
+          "default": true,
+          "description": "Convert '. . .' to '...'"
+        },
+        "cjkFormatter.rules.dashConversion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Convert '--' to '——' between CJK characters"
+        },
+        "cjkFormatter.rules.emdashSpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Fix spacing around '——'"
+        },
+        "cjkFormatter.rules.quoteSpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add spaces around quotes with smart CJK handling"
+        },
+        "cjkFormatter.rules.singleQuoteSpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add spaces around single quotes with smart CJK handling"
+        },
+        "cjkFormatter.rules.cjkEnglishSpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add spaces between CJK and English/numbers"
+        },
+        "cjkFormatter.rules.fullwidthPunctuation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Normalize punctuation width in CJK context"
+        },
+        "cjkFormatter.rules.fullwidthParentheses": {
+          "type": "boolean",
+          "default": true,
+          "description": "Normalize () to （） in CJK context"
+        },
+        "cjkFormatter.rules.fullwidthAlphanumeric": {
+          "type": "boolean",
+          "default": true,
+          "description": "Convert fullwidth alphanumeric to halfwidth"
+        },
+        "cjkFormatter.rules.currencySpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Remove space: '$ 100' → '$100'"
+        },
+        "cjkFormatter.rules.slashSpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Remove space: 'A / B' → 'A/B'"
+        },
+        "cjkFormatter.rules.spaceCollapsing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Collapse multiple spaces (preserve indents)"
+        },
+        "cjkFormatter.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show formatter status in status bar"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.84.0",
+    "@types/node": "^20.x",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.50.0",
+    "typescript": "^5.2.0",
+    "@vscode/test-electron": "^2.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xiaolai/cjk-formatter-vscode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xiaolai/cjk-formatter-vscode/issues"
+  },
+  "homepage": "https://github.com/xiaolai/cjk-formatter-vscode#readme",
+  "license": "MIT"
+}
