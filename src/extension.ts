@@ -5,8 +5,10 @@
 
 import * as vscode from 'vscode';
 import { formatText, RuleConfig } from './formatter';
+import { countWords, formatWordCount } from './wordCounter';
 
 let statusBarItem: vscode.StatusBarItem;
+let wordCountStatusBarItem: vscode.StatusBarItem;
 
 /**
  * Read formatter configuration from VS Code settings
@@ -177,12 +179,66 @@ async function onWillSaveDocument(event: vscode.TextDocumentWillSaveEvent) {
 }
 
 /**
+ * Update word count status bar
+ */
+function updateWordCount() {
+    const editor = vscode.window.activeTextEditor;
+
+    // Hide word count if no editor or word count is disabled
+    if (!wordCountStatusBarItem) {
+        return;
+    }
+
+    if (!editor) {
+        wordCountStatusBarItem.hide();
+        return;
+    }
+
+    // Only show word count for markdown files
+    if (editor.document.languageId !== 'markdown') {
+        wordCountStatusBarItem.hide();
+        return;
+    }
+
+    // Get configuration
+    const config = vscode.workspace.getConfiguration('cjkFormatter.wordCount');
+    const format = config.get<'total' | 'detailed'>('format', 'total');
+
+    // Check if there's a selection
+    const selection = editor.selection;
+    let text: string;
+    let isSelection = false;
+
+    if (!selection.isEmpty) {
+        text = editor.document.getText(selection);
+        isSelection = true;
+    } else {
+        text = editor.document.getText();
+    }
+
+    // Count words
+    const result = countWords(text);
+    const displayText = formatWordCount(result, format);
+
+    // Update status bar
+    if (isSelection) {
+        wordCountStatusBarItem.text = `$(symbol-string) Selection: ${result.total.toLocaleString()}`;
+        wordCountStatusBarItem.tooltip = `Selection Word Count\n${displayText}\nCharacters: ${result.chars.toLocaleString()}`;
+    } else {
+        wordCountStatusBarItem.text = `$(symbol-string) ${displayText}`;
+        wordCountStatusBarItem.tooltip = `Document Word Count\nCJK: ${result.cjk.toLocaleString()}\nEnglish: ${result.english.toLocaleString()}\nTotal: ${result.total.toLocaleString()}\nCharacters: ${result.chars.toLocaleString()}`;
+    }
+
+    wordCountStatusBarItem.show();
+}
+
+/**
  * Extension activation
  */
 export function activate(context: vscode.ExtensionContext) {
     console.log('CJK Text Formatter is now active');
 
-    // Create status bar item
+    // Create formatter status bar item
     const showStatusBar = vscode.workspace.getConfiguration('cjkFormatter').get('showStatusBar', true);
     if (showStatusBar) {
         statusBarItem = vscode.window.createStatusBarItem(
@@ -191,6 +247,44 @@ export function activate(context: vscode.ExtensionContext) {
         );
         updateStatusBar('Ready');
         context.subscriptions.push(statusBarItem);
+    }
+
+    // Create word count status bar item
+    const wordCountConfig = vscode.workspace.getConfiguration('cjkFormatter.wordCount');
+    const wordCountEnabled = wordCountConfig.get('enabled', true);
+    if (wordCountEnabled) {
+        wordCountStatusBarItem = vscode.window.createStatusBarItem(
+            vscode.StatusBarAlignment.Right,
+            99  // Position next to formatter status bar
+        );
+        context.subscriptions.push(wordCountStatusBarItem);
+
+        // Update word count on editor change
+        const editorChangeHandler = vscode.window.onDidChangeActiveTextEditor(() => {
+            updateWordCount();
+        });
+        context.subscriptions.push(editorChangeHandler);
+
+        // Update word count on document change
+        const documentChangeHandler = vscode.workspace.onDidChangeTextDocument(event => {
+            const editor = vscode.window.activeTextEditor;
+            if (editor && event.document === editor.document) {
+                updateWordCount();
+            }
+        });
+        context.subscriptions.push(documentChangeHandler);
+
+        // Update word count on selection change
+        const selectionChangeHandler = vscode.window.onDidChangeTextEditorSelection(event => {
+            const editor = vscode.window.activeTextEditor;
+            if (editor && event.textEditor === editor) {
+                updateWordCount();
+            }
+        });
+        context.subscriptions.push(selectionChangeHandler);
+
+        // Initial word count update
+        updateWordCount();
     }
 
     // Register format document command
@@ -226,6 +320,25 @@ export function activate(context: vscode.ExtensionContext) {
                 statusBarItem.dispose();
             }
         }
+
+        if (event.affectsConfiguration('cjkFormatter.wordCount.enabled')) {
+            const enabled = vscode.workspace.getConfiguration('cjkFormatter.wordCount').get('enabled', true);
+            if (enabled && !wordCountStatusBarItem) {
+                wordCountStatusBarItem = vscode.window.createStatusBarItem(
+                    vscode.StatusBarAlignment.Right,
+                    99
+                );
+                context.subscriptions.push(wordCountStatusBarItem);
+                updateWordCount();
+            } else if (!enabled && wordCountStatusBarItem) {
+                wordCountStatusBarItem.dispose();
+                wordCountStatusBarItem = undefined as any;
+            }
+        }
+
+        if (event.affectsConfiguration('cjkFormatter.wordCount.format')) {
+            updateWordCount();
+        }
     });
     context.subscriptions.push(configChangeHandler);
 }
@@ -236,5 +349,8 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {
     if (statusBarItem) {
         statusBarItem.dispose();
+    }
+    if (wordCountStatusBarItem) {
+        wordCountStatusBarItem.dispose();
     }
 }

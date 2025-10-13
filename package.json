@@ -27,7 +27,9 @@
     "markdown",
     "spacing",
     "punctuation",
-    "mixed-language"
+    "mixed-language",
+    "word-count",
+    "wordcount"
   ],
   "activationEvents": [
     "onLanguage:markdown",
@@ -134,6 +136,107 @@
           "items": {
             "type": "object",
             "required": ["name", "pattern", "replacement"],
+            "defaultSnippets": [
+              {
+                "label": "Unicode Right Arrow (->)",
+                "description": "Convert ASCII arrow -> to Unicode arrow →",
+                "body": {
+                  "name": "right_arrow",
+                  "pattern": "\\\\s*->\\\\s*",
+                  "replacement": " → ",
+                  "description": "Convert -> to →",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Unicode Left Arrow (<-)",
+                "description": "Convert ASCII arrow <- to Unicode arrow ←",
+                "body": {
+                  "name": "left_arrow",
+                  "pattern": "\\\\s*<-\\\\s*",
+                  "replacement": " ← ",
+                  "description": "Convert <- to ←",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Bidirectional Arrow (<->)",
+                "description": "Convert <-> to ↔",
+                "body": {
+                  "name": "bidirectional_arrow",
+                  "pattern": "\\\\s*<->\\\\s*",
+                  "replacement": " ↔ ",
+                  "description": "Convert <-> to ↔",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Multiplication Sign (x)",
+                "description": "Convert 'x' to '×' between numbers (e.g., 10 x 20 → 10×20)",
+                "body": {
+                  "name": "multiplication",
+                  "pattern": "(\\\\d+)\\\\s*x\\\\s*(\\\\d+)",
+                  "replacement": "$1×$2",
+                  "description": "Convert x to × between numbers",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Fraction: One Half (1/2)",
+                "description": "Convert 1/2 to ½",
+                "body": {
+                  "name": "fraction_half",
+                  "pattern": "\\\\b1/2\\\\b",
+                  "replacement": "½",
+                  "description": "Convert 1/2 to ½",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Fraction: One Third (1/3)",
+                "description": "Convert 1/3 to ⅓",
+                "body": {
+                  "name": "fraction_third",
+                  "pattern": "\\\\b1/3\\\\b",
+                  "replacement": "⅓",
+                  "description": "Convert 1/3 to ⅓",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Fraction: One Quarter (1/4)",
+                "description": "Convert 1/4 to ¼",
+                "body": {
+                  "name": "fraction_quarter",
+                  "pattern": "\\\\b1/4\\\\b",
+                  "replacement": "¼",
+                  "description": "Convert 1/4 to ¼",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Temperature: Celsius",
+                "description": "Add degree symbol to Celsius (e.g., 25 C → 25°C)",
+                "body": {
+                  "name": "celsius",
+                  "pattern": "(\\\\d+)\\\\s*C\\\\b",
+                  "replacement": "$1°C",
+                  "description": "Add degree symbol to Celsius",
+                  "enabled": true
+                }
+              },
+              {
+                "label": "Temperature: Fahrenheit",
+                "description": "Add degree symbol to Fahrenheit (e.g., 77 F → 77°F)",
+                "body": {
+                  "name": "fahrenheit",
+                  "pattern": "(\\\\d+)\\\\s*F\\\\b",
+                  "replacement": "$1°F",
+                  "description": "Add degree symbol to Fahrenheit",
+                  "enabled": true
+                }
+              }
+            ],
             "properties": {
               "name": {
                 "type": "string",
@@ -158,6 +261,21 @@
               }
             }
           }
+        },
+        "cjkFormatter.wordCount.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable word count for markdown files"
+        },
+        "cjkFormatter.wordCount.format": {
+          "type": "string",
+          "enum": ["total", "detailed"],
+          "default": "total",
+          "description": "Word count display format: 'total' shows 'Words: 1,234', 'detailed' shows 'CJK: 850 | EN: 384 | Total: 1,234'",
+          "enumDescriptions": [
+            "Show only total word count",
+            "Show detailed breakdown (CJK, English, Total)"
+          ]
         }
       }
     }

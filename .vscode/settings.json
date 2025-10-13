@@ -1,0 +1,192 @@
+{
+  // ============================================================================
+  // CJK Text Formatter - Example Custom Rules
+  // ============================================================================
+  //
+  // Uncomment and modify the examples below to add custom formatting rules.
+  // These rules are applied AFTER all built-in formatting rules.
+  //
+  // Rule Structure:
+  // {
+  //   "name": "rule_identifier",           // Unique rule ID
+  //   "pattern": "regex_pattern",          // Regex pattern to match
+  //   "replacement": "replacement_text",   // Text to replace with
+  //   "description": "What this rule does", // Optional description
+  //   "enabled": true                      // Optional: enable/disable rule
+  // }
+  //
+  // Tips:
+  // - Use double backslashes (\\) for regex escape characters in JSON
+  // - Use $1, $2, etc. for capture groups in replacement
+  // - Test your patterns at https://regex101.com first
+  // ============================================================================
+
+  "cjkFormatter.customRules": [
+
+    // ========================================
+    // Example 1: Unicode Arrows
+    // ========================================
+    // Convert ASCII arrows to Unicode arrows
+    // Before: A -> B <- C <-> D
+    // After:  A → B ← C ↔ D
+
+    // {
+    //   "name": "right_arrow",
+    //   "pattern": "\\s*->\\s*",
+    //   "replacement": " → ",
+    //   "description": "Convert -> to →"
+    // },
+    // {
+    //   "name": "left_arrow",
+    //   "pattern": "\\s*<-\\s*",
+    //   "replacement": " ← ",
+    //   "description": "Convert <- to ←"
+    // },
+    // {
+    //   "name": "bidirectional_arrow",
+    //   "pattern": "\\s*<->\\s*",
+    //   "replacement": " ↔ ",
+    //   "description": "Convert <-> to ↔"
+    // },
+
+    // ========================================
+    // Example 2: Multiplication Sign
+    // ========================================
+    // Convert 'x' between numbers to proper multiplication sign
+    // Before: 计算 10 x 20 = 200
+    // After:  计算 10×20 = 200
+
+    // {
+    //   "name": "multiplication",
+    //   "pattern": "(\\d+)\\s*x\\s*(\\d+)",
+    //   "replacement": "$1×$2",
+    //   "description": "Convert x to × between numbers"
+    // },
+
+    // ========================================
+    // Example 3: Common Fractions
+    // ========================================
+    // Convert fraction text to Unicode fraction symbols
+    // Before: Mix 1/2 cup, 1/3 tsp, 1/4 oz
+    // After:  Mix ½ cup, ⅓ tsp, ¼ oz
+
+    // {
+    //   "name": "fraction_half",
+    //   "pattern": "\\b1/2\\b",
+    //   "replacement": "½",
+    //   "description": "Convert 1/2 to ½"
+    // },
+    // {
+    //   "name": "fraction_third",
+    //   "pattern": "\\b1/3\\b",
+    //   "replacement": "⅓",
+    //   "description": "Convert 1/3 to ⅓"
+    // },
+    // {
+    //   "name": "fraction_quarter",
+    //   "pattern": "\\b1/4\\b",
+    //   "replacement": "¼",
+    //   "description": "Convert 1/4 to ¼"
+    // },
+    // {
+    //   "name": "fraction_three_quarters",
+    //   "pattern": "\\b3/4\\b",
+    //   "replacement": "¾",
+    //   "description": "Convert 3/4 to ¾"
+    // },
+
+    // ========================================
+    // Example 4: Temperature Symbols
+    // ========================================
+    // Add degree symbols to temperature units
+    // Before: 温度是 25 C 或者 77 F
+    // After:  温度是 25°C 或者 77°F
+
+    // {
+    //   "name": "celsius",
+    //   "pattern": "(\\d+)\\s*C\\b",
+    //   "replacement": "$1°C",
+    //   "description": "Add degree symbol to Celsius"
+    // },
+    // {
+    //   "name": "fahrenheit",
+    //   "pattern": "(\\d+)\\s*F\\b",
+    //   "replacement": "$1°F",
+    //   "description": "Add degree symbol to Fahrenheit"
+    // },
+
+    // ========================================
+    // Example 5: Mathematical Symbols
+    // ========================================
+    // Convert text operators to proper math symbols
+    // Before: x >= 10 and y <= 20
+    // After:  x ≥ 10 and y ≤ 20
+
+    // {
+    //   "name": "greater_equal",
+    //   "pattern": "\\s*>=\\s*",
+    //   "replacement": " ≥ ",
+    //   "description": "Convert >= to ≥"
+    // },
+    // {
+    //   "name": "less_equal",
+    //   "pattern": "\\s*<=\\s*",
+    //   "replacement": " ≤ ",
+    //   "description": "Convert <= to ≤"
+    // },
+    // {
+    //   "name": "not_equal",
+    //   "pattern": "\\s*!=\\s*",
+    //   "replacement": " ≠ ",
+    //   "description": "Convert != to ≠"
+    // },
+
+    // ========================================
+    // Example 6: Ellipsis Variations
+    // ========================================
+    // Normalize different ellipsis styles (if you want custom behavior)
+    // Note: Built-in ellipsis rule already exists, but you can override
+
+    // {
+    //   "name": "ellipsis_custom",
+    //   "pattern": "\\.{3,}",
+    //   "replacement": "…",
+    //   "description": "Convert ... to …",
+    //   "enabled": false  // Disabled by default to avoid conflict
+    // },
+
+    // ========================================
+    // Your Custom Rules
+    // ========================================
+    // Add your own custom rules below:
+
+  ],
+
+  // ============================================================================
+  // Other CJK Formatter Settings
+  // ============================================================================
+
+  // Word Count Settings (for markdown files)
+  "cjkFormatter.wordCount.enabled": true,
+  "cjkFormatter.wordCount.format": "total",  // "total" or "detailed"
+
+  // Format on Save
+  "cjkFormatter.formatOnSave": false,
+
+  // Status Bar
+  "cjkFormatter.showStatusBar": true,
+
+  // Built-in Rules (all enabled by default)
+  "cjkFormatter.rules.ellipsisNormalization": true,
+  "cjkFormatter.rules.dashConversion": true,
+  "cjkFormatter.rules.emdashSpacing": true,
+  "cjkFormatter.rules.quoteSpacing": true,
+  "cjkFormatter.rules.singleQuoteSpacing": true,
+  "cjkFormatter.rules.cjkEnglishSpacing": true,
+  "cjkFormatter.rules.fullwidthPunctuation": true,
+  "cjkFormatter.rules.fullwidthParentheses": true,
+  "cjkFormatter.rules.fullwidthAlphanumeric": true,
+  "cjkFormatter.rules.currencySpacing": true,
+  "cjkFormatter.rules.slashSpacing": true,
+  "cjkFormatter.rules.spaceCollapsing": true
+}
