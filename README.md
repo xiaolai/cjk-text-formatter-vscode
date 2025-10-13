@@ -1,5 +1,8 @@
 # CJK Text Formatter
 
+[![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/lixiaolai.cjk-text-formatter?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/lixiaolai.cjk-text-formatter)](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)
+
 A VS Code extension for formatting CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules.
 
 ## Features
@@ -158,8 +161,12 @@ All formatting rules can be toggled individually in VS Code settings:
 
 ### From VS Code Marketplace
 
+**[Install directly from VS Code Marketplace →](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)**
+
+Or install manually:
+
 1. Open VS Code
-2. Go to Extensions (Cmd+Shift+X / Ctrl+Shift+X)
+2. Go to Extensions (`Cmd+Shift+X` / `Ctrl+Shift+X`)
 3. Search for "CJK Text Formatter"
 4. Click Install
 

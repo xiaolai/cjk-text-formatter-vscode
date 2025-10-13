@@ -1,8 +1,8 @@
 {
-  "name": "cjk-formatter",
+  "name": "cjk-text-formatter",
   "displayName": "CJK Text Formatter",
   "description": "Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "lixiaolai",
   "icon": "icon.png",
   "engines": {
@@ -150,11 +150,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/xiaolai/cjk-formatter-vscode.git"
+    "url": "https://github.com/xiaolai/cjk-text-formatter-vscode.git"
   },
   "bugs": {
-    "url": "https://github.com/xiaolai/cjk-formatter-vscode/issues"
+    "url": "https://github.com/xiaolai/cjk-text-formatter-vscode/issues"
   },
-  "homepage": "https://github.com/xiaolai/cjk-formatter-vscode#readme",
+  "homepage": "https://github.com/xiaolai/cjk-text-formatter-vscode#readme",
   "license": "MIT"
 }

@@ -2,6 +2,14 @@
 
 All notable changes to the "CJK Text Formatter" extension will be documented in this file.
 
+## [1.0.3] - 2025-10-14
+
+### Changed
+- Renamed package from `cjk-formatter` to `cjk-text-formatter` for clarity and consistency
+- Updated GitHub repository name from `cjk-formatter-vscode` to `cjk-text-formatter-vscode`
+- Added VS Code Marketplace badge and direct installation link to README
+- Enhanced installation section in README with marketplace URL
+
 ## [1.0.2] - 2025-10-13
 
 ### Fixed
