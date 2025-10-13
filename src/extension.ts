@@ -36,6 +36,16 @@ function getFormatterConfig(): RuleConfig {
 }
 
 /**
+ * Check if current file type is supported for formatting
+ */
+function isSupportedLanguage(languageId: string): boolean {
+    const config = vscode.workspace.getConfiguration('cjkFormatter');
+    const supported = config.get<string[]>('supportedLanguages',
+        ['markdown', 'plaintext', 'restructuredtext']);
+    return supported.includes(languageId);
+}
+
+/**
  * Format the entire document
  */
 async function formatDocument() {
@@ -62,21 +72,21 @@ async function formatDocument() {
             edit.replace(document.uri, fullRange, formatted);
 
             await vscode.workspace.applyEdit(edit);
-            updateStatusBar('Formatted', true);
+            updateStatusBarMessage('Formatted', true);
 
             // Clear status after 2 seconds
             setTimeout(() => {
-                updateStatusBar('Ready');
+                updateFormatterStatusBar();
             }, 2000);
         } else {
-            updateStatusBar('No changes needed', true);
+            updateStatusBarMessage('No changes needed', true);
             setTimeout(() => {
-                updateStatusBar('Ready');
+                updateFormatterStatusBar();
             }, 2000);
         }
     } catch (error) {
         vscode.window.showErrorMessage(`CJK Formatter Error: ${error}`);
-        updateStatusBar('Error', false);
+        updateStatusBarMessage('Error', false);
     }
 }
 
@@ -106,27 +116,50 @@ async function formatSelection() {
             await editor.edit(editBuilder => {
                 editBuilder.replace(selection, formatted);
             });
-            updateStatusBar('Selection formatted', true);
+            updateStatusBarMessage('Selection formatted', true);
 
             setTimeout(() => {
-                updateStatusBar('Ready');
+                updateFormatterStatusBar();
             }, 2000);
         } else {
-            updateStatusBar('No changes needed', true);
+            updateStatusBarMessage('No changes needed', true);
             setTimeout(() => {
-                updateStatusBar('Ready');
+                updateFormatterStatusBar();
             }, 2000);
         }
     } catch (error) {
         vscode.window.showErrorMessage(`CJK Formatter Error: ${error}`);
-        updateStatusBar('Error', false);
+        updateStatusBarMessage('Error', false);
     }
 }
 
 /**
- * Update status bar item
+ * Update formatter status bar visibility based on file type
  */
-function updateStatusBar(text: string, temporary = false) {
+function updateFormatterStatusBar() {
+    const editor = vscode.window.activeTextEditor;
+
+    if (!statusBarItem) {
+        return;
+    }
+
+    // Hide if no editor or unsupported language
+    if (!editor || !isSupportedLanguage(editor.document.languageId)) {
+        statusBarItem.hide();
+        return;
+    }
+
+    // Show for supported languages
+    statusBarItem.text = `$(edit) CJK: Ready`;
+    statusBarItem.tooltip = 'Click to format document';
+    statusBarItem.command = 'cjk-formatter.formatDocument';
+    statusBarItem.show();
+}
+
+/**
+ * Update status bar with temporary message (for formatting feedback)
+ */
+function updateStatusBarMessage(text: string, temporary = false) {
     if (!statusBarItem) {
         return;
     }
@@ -156,9 +189,7 @@ async function onWillSaveDocument(event: vscode.TextDocumentWillSaveEvent) {
 
     // Only format supported languages
     const document = event.document;
-    const supportedLanguages = ['markdown', 'plaintext', 'html'];
-
-    if (!supportedLanguages.includes(document.languageId)) {
+    if (!isSupportedLanguage(document.languageId)) {
         return;
     }
 
@@ -245,8 +276,16 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.StatusBarAlignment.Right,
             100
         );
-        updateStatusBar('Ready');
         context.subscriptions.push(statusBarItem);
+
+        // Update status bar on editor change
+        const formatterEditorChangeHandler = vscode.window.onDidChangeActiveTextEditor(() => {
+            updateFormatterStatusBar();
+        });
+        context.subscriptions.push(formatterEditorChangeHandler);
+
+        // Initial status bar update
+        updateFormatterStatusBar();
     }
 
     // Create word count status bar item
@@ -314,11 +353,15 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.StatusBarAlignment.Right,
                     100
                 );
-                updateStatusBar('Ready');
                 context.subscriptions.push(statusBarItem);
+                updateFormatterStatusBar();
             } else if (!show && statusBarItem) {
                 statusBarItem.dispose();
             }
+        }
+
+        if (event.affectsConfiguration('cjkFormatter.supportedLanguages')) {
+            updateFormatterStatusBar();
         }
 
         if (event.affectsConfiguration('cjkFormatter.wordCount.enabled')) {

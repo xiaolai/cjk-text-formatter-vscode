@@ -3,123 +3,46 @@
 [![VS Code Marketplace](https://img.shields.io/visual-studio-marketplace/v/lixiaolai.cjk-text-formatter?label=VS%20Code%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/lixiaolai.cjk-text-formatter)](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)
 
-A VS Code extension for formatting CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules.
+Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules. Includes word counter for markdown files and custom rule support.
+
+## Quick Start
+
+**Commands:**
+- `Cmd/Ctrl+Shift+F` - Format Document
+- Command Palette → `CJK: Format Selection`
+
+**Word Count** (markdown only):
+- Shows in status bar automatically
+- Includes CJK characters + English words + numbers
+- Displays selection count when text is selected
 
 ## Features
 
-- **Smart Spacing**: Automatically adds appropriate spaces between CJK and English/numbers
-- **Punctuation Normalization**: Converts half-width punctuation to full-width in CJK context
-- **Quote Handling**: Smart spacing around quotation marks with CJK punctuation awareness
-- **Dash Conversion**: Converts `--` to `——` (em-dash) between CJK characters
-- **Ellipsis Normalization**: Standardizes spaced ellipsis (`. . .`) to `...`
-- **Full-width Character Handling**: Converts full-width alphanumeric to half-width
-- **Bracket Normalization**: Converts `()` to `（）` in CJK context
-- **Currency & Slash Spacing**: Removes unwanted spaces (`$ 100` → `$100`, `A / B` → `A/B`)
-- **Format on Save**: Optional automatic formatting when saving files
+### Core Formatting
 
-## Usage
+| Feature | Example |
+|---------|---------|
+| **CJK-English Spacing** | `中文English` → `中文 English` |
+| **Punctuation Width** | `中文,text` → `中文，text` |
+| **Quote Spacing** | `中文"text"` → `中文 "text"` |
+| **Em-dash** | `中文--English` → `中文 —— English` |
+| **Ellipsis** | `. . .` → `...` |
+| **Parentheses** | `中文(text)` → `中文（text）` |
+| **Fullwidth → Halfwidth** | `ＡＢＣ１２３` → `ABC123` |
+| **Currency** | `$ 100` → `$100` |
+| **Slashes** | `A / B` → `A/B` |
 
-### Commands
+### Word Count (Markdown Only)
 
-- **CJK: Format Document** (`Cmd+Shift+F` on Mac, `Ctrl+Shift+F` on Windows/Linux)
-  - Formats the entire document
+- **CJK**: Each character = 1 word
+- **English**: Space-separated words (includes numbers)
+- **Smart**: Strips markdown formatting (code blocks, headings, etc.)
+- **Display**: Status bar shows `Words: 1,234` or detailed breakdown
+- **Selection**: Shows count for selected text
 
-- **CJK: Format Selection**
-  - Formats only the selected text
+### Custom Rules
 
-### Format on Save
-
-Enable automatic formatting on save in your settings:
-
-```json
-{
-  "cjkFormatter.formatOnSave": true
-}
-```
-
-## Configuration
-
-All formatting rules can be toggled individually in VS Code settings:
-
-```json
-{
-  "cjkFormatter.formatOnSave": false,
-  "cjkFormatter.rules.ellipsisNormalization": true,
-  "cjkFormatter.rules.dashConversion": true,
-  "cjkFormatter.rules.emdashSpacing": true,
-  "cjkFormatter.rules.quoteSpacing": true,
-  "cjkFormatter.rules.singleQuoteSpacing": true,
-  "cjkFormatter.rules.cjkEnglishSpacing": true,
-  "cjkFormatter.rules.fullwidthPunctuation": true,
-  "cjkFormatter.rules.fullwidthParentheses": true,
-  "cjkFormatter.rules.fullwidthBrackets": false,
-  "cjkFormatter.rules.fullwidthAlphanumeric": true,
-  "cjkFormatter.rules.currencySpacing": true,
-  "cjkFormatter.rules.slashSpacing": true,
-  "cjkFormatter.rules.spaceCollapsing": true,
-  "cjkFormatter.showStatusBar": true
-}
-```
-
-### Rule Descriptions
-
-| Rule | Description | Examples |
-|------|-------------|----------|
-| `ellipsisNormalization` | Convert spaced dots to standard ellipsis | `. . .` → `...` |
-| `dashConversion` | Convert double dash to em-dash between CJK | `中文--English` → `中文 —— English`<br>`日本語--text` → `日本語 —— text`<br>`한국어--Korean` → `한국어 —— Korean` |
-| `emdashSpacing` | Fix spacing around existing em-dashes | `中文——English` → `中文 —— English` |
-| `quoteSpacing` | Add spaces around double quotes | `中文"text"English` → `中文 "text" English`<br>`日本語"text"です` → `日本語 "text" です` |
-| `singleQuoteSpacing` | Add spaces around single quotes | `中文'text'English` → `中文 'text' English` |
-| `cjkEnglishSpacing` | Add spaces between CJK and alphanumeric | `中文English123` → `中文 English123`<br>`日本語Text` → `日本語 Text`<br>`한국어ABC` → `한국어 ABC` |
-| `fullwidthPunctuation` | Normalize punctuation width in CJK context | `中文,English` → `中文，English`<br>`日本語.text` → `日本語。text` |
-| `fullwidthParentheses` | Convert parentheses in CJK context | `中文(括号)` → `中文（括号）`<br>`日本語(かっこ)` → `日本語（かっこ）` |
-| `fullwidthBrackets` | Convert brackets in CJK context | `中文[括号]` → `中文【括号】`<br>`日本語[かっこ]` → `日本語【かっこ】` |
-| `fullwidthAlphanumeric` | Convert full-width alphanumeric to half-width | `ＡＢＣ１２３` → `ABC123` |
-| `currencySpacing` | Remove space between currency and amount | `$ 100` → `$100`<br>`¥ 100` → `¥100` |
-| `slashSpacing` | Remove spaces around slashes | `A / B` → `A/B` |
-| `spaceCollapsing` | Collapse multiple spaces to single space | `word  word` → `word word` |
-
-## Custom Rules
-
-Define your own regex-based formatting rules to extend the formatter's capabilities. Custom rules are applied **after** all built-in rules.
-
-### Configuration
-
-Add custom rules in your VS Code `settings.json`:
-
-```json
-{
-  "cjkFormatter.customRules": [
-    {
-      "name": "unicode_arrows",
-      "pattern": "\\s*->\\s*",
-      "replacement": " → ",
-      "description": "Use Unicode right arrow",
-      "enabled": true
-    },
-    {
-      "name": "multiplication_sign",
-      "pattern": "(\\d+)\\s*x\\s*(\\d+)",
-      "replacement": "$1×$2",
-      "description": "Use proper multiplication sign between numbers"
-    }
-  ]
-}
-```
-
-### Rule Structure
-
-Each custom rule requires:
-
-- **`name`** (required): Unique identifier for the rule
-- **`pattern`** (required): Regular expression pattern to match
-- **`replacement`** (required): Replacement string (use `$1`, `$2` for capture groups)
-- **`description`** (optional): Human-readable description
-- **`enabled`** (optional): Whether the rule is active (default: `true`)
-
-### Common Examples
-
-#### Unicode Arrows
+Add your own regex patterns via IntelliSense or settings:
 
 ```json
 {
@@ -128,256 +51,102 @@ Each custom rule requires:
       "name": "right_arrow",
       "pattern": "\\s*->\\s*",
       "replacement": " → "
-    },
-    {
-      "name": "left_arrow",
-      "pattern": "\\s*<-\\s*",
-      "replacement": " ← "
-    },
-    {
-      "name": "bidirectional_arrow",
-      "pattern": "\\s*<->\\s*",
-      "replacement": " ↔ "
     }
   ]
 }
 ```
 
-**Input:** `A -> B <- C <-> D`
-**Output:** `A → B ← C ↔ D`
+**Built-in examples** (press `Ctrl+Space` in settings):
+- Unicode arrows (→, ←, ↔)
+- Multiplication sign (×)
+- Fractions (½, ⅓, ¼)
+- Temperature symbols (°C, °F)
 
-#### Unicode Fractions
+## Configuration
+
+### Supported File Types
+
+Default: `markdown`, `plaintext`, `restructuredtext`
 
 ```json
 {
-  "cjkFormatter.customRules": [
-    {
-      "name": "fraction_half",
-      "pattern": "\\b1/2\\b",
-      "replacement": "½"
-    },
-    {
-      "name": "fraction_third",
-      "pattern": "\\b1/3\\b",
-      "replacement": "⅓"
-    },
-    {
-      "name": "fraction_quarter",
-      "pattern": "\\b1/4\\b",
-      "replacement": "¼"
-    }
-  ]
+  "cjkFormatter.supportedLanguages": ["markdown", "plaintext", "restructuredtext"]
 }
 ```
 
-**Input:** `Mix 1/2 cup, 1/3 tsp, 1/4 oz`
-**Output:** `Mix ½ cup, ⅓ tsp, ¼ oz`
+Add `html`, `latex`, or `asciidoc` if needed. Status bar and format-on-save only work for selected types.
 
-#### Multiplication Sign
+### Word Count
 
 ```json
 {
-  "cjkFormatter.customRules": [
-    {
-      "name": "multiplication",
-      "pattern": "(\\d+)\\s*x\\s*(\\d+)",
-      "replacement": "$1×$2"
-    }
-  ]
+  "cjkFormatter.wordCount.enabled": true,
+  "cjkFormatter.wordCount.format": "total"  // or "detailed"
 }
 ```
 
-**Input:** `计算 10 x 20 结果`
-**Output:** `计算 10×20 结果`
-
-#### Temperature Symbols
+### Format on Save
 
 ```json
 {
-  "cjkFormatter.customRules": [
-    {
-      "name": "celsius",
-      "pattern": "(\\d+)\\s*C\\b",
-      "replacement": "$1°C"
-    },
-    {
-      "name": "fahrenheit",
-      "pattern": "(\\d+)\\s*F\\b",
-      "replacement": "$1°F"
-    }
-  ]
+  "cjkFormatter.formatOnSave": true
 }
 ```
 
-**Input:** `温度 25 C 或 77 F`
-**Output:** `温度 25°C 或 77°F`
+### Toggle Rules
 
-### Tips
+All 13 formatting rules can be enabled/disabled:
 
-- **Test your patterns**: Use a regex tester before adding rules
-- **Escape special characters**: Use `\\` for backslash in JSON strings
-- **Use word boundaries**: `\\b` to match whole words only
-- **Capture groups**: Use `$1`, `$2`, etc. in replacements for captured text
-- **Execution order**: Custom rules run in the order defined
-- **Disable temporarily**: Set `"enabled": false` to keep rule but disable it
-
-### Error Handling
-
-- Invalid regex patterns are automatically skipped with a warning
-- Rules with missing required fields (`name`, `pattern`, `replacement`) are ignored
-- The formatter continues to work even if some custom rules fail
+```json
+{
+  "cjkFormatter.rules.cjkEnglishSpacing": true,
+  "cjkFormatter.rules.fullwidthPunctuation": true,
+  "cjkFormatter.rules.quoteSpacing": true,
+  // ... see Settings UI for full list
+}
+```
 
 ## Examples
 
-### Chinese (中文)
-
-**Before Formatting:**
+### Chinese
 ```text
-这是一段中文English混合text，标点符号，也不规范。
-价格是$ 100，比例是50/50。
-. . . 省略号也不对。
-"引号spacing"也有问题，中文(括号)需要转换。
-全角字符ＡＢＣ１２３和数字100之间需要空格。
+Before: 这是中文English混合text，价格$ 100
+After:  这是中文 English 混合 text，价格 $100
 ```
 
-**After Formatting:**
+### Japanese
 ```text
-这是一段中文 English 混合 text，标点符号，也不规范。
-价格是 $100，比例是 50/50。
-... 省略号也不对。
-"引号 spacing" 也有问题，中文（括号）需要转换。
-全角字符 ABC123 和数字 100 之间需要空格。
+Before: 日本語Englishの混合textです
+After:  日本語 English の混合 text です
 ```
 
-### Japanese (日本語)
-
-**Before Formatting:**
+### Korean
 ```text
-日本語Englishの混合textです。価格は$ 100で、比率は50/50です。
-全角文字ＡＢＣ１２３を使用しています。
-"引用符spacing"の問題もあり、日本語(括弧)も変換が必要です。
-数字100と日本語の間にはスペースが必要です。
+Before: 한국어English혼합text입니다
+After:  한국어 English 혼합 text 입니다
 ```
-
-**After Formatting:**
-```text
-日本語 English の混合 text です。価格は $100 で、比率は 50/50 です。
-全角文字 ABC123 を使用しています。
-"引用符 spacing" の問題もあり、日本語（括弧）も変換が必要です。
-数字 100 と日本語の間にはスペースが必要です。
-```
-
-### Korean (한국어)
-
-**Before Formatting:**
-```text
-한국어English혼합text입니다.가격은$ 100이고비율은50/50입니다.
-전각문자ＡＢＣ１２３를사용하고있습니다.
-"인용부호spacing"문제도있고,한국어(괄호)도변환이필요합니다.
-숫자100와한국어사이에는공백이필요합니다.
-```
-
-**After Formatting:**
-```text
-한국어 English 혼합 text 입니다. 가격은 $100 이고 비율은 50/50 입니다.
-전각문자 ABC123 를 사용하고 있습니다.
-"인용부호 spacing" 문제도 있고, 한국어（괄호）도 변환이 필요합니다.
-숫자 100 와 한국어 사이에는 공백이 필요합니다.
-```
-
-### Mixed Languages
-
-**Before Formatting:**
-```text
-这是中文Chinese、これは日本語Japanese、이것은한국어Korean.
-价格Price가격は$ 100.比例ratio비율는50/50です。
-```
-
-**After Formatting:**
-```text
-这是中文 Chinese、これは日本語 Japanese、이것은 한국어 Korean.
-价格 Price 가격は $100. 比例 ratio 비율는 50/50 です。
-```
-
-## Supported Languages
-
-- Markdown (`.md`)
-- Plain Text (`.txt`)
-- HTML (`.html`)
 
 ## Installation
 
-### From VS Code Marketplace
+**[Install from VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)**
 
-**[Install directly from VS Code Marketplace →](https://marketplace.visualstudio.com/items?itemName=lixiaolai.cjk-text-formatter)**
-
-Or install manually:
-
-1. Open VS Code
-2. Go to Extensions (`Cmd+Shift+X` / `Ctrl+Shift+X`)
-3. Search for "CJK Text Formatter"
-4. Click Install
-
-### From VSIX
-
-1. Download the `.vsix` file
-2. Open VS Code
-3. Go to Extensions
-4. Click "..." menu → Install from VSIX
-5. Select the downloaded file
+Or: Extensions → Search "CJK Text Formatter" → Install
 
 ## Development
 
-### Build from Source
-
 ```bash
-# Install dependencies
-npm install
-
-# Compile TypeScript
-npm run compile
-
-# Watch mode for development
-npm run watch
-
-# Run linter
-npm run lint
-
-# Package extension
-npm run package
+npm install          # Install dependencies
+npm run compile      # Build
+npm run watch        # Watch mode
+./testing/install.sh # Local testing
 ```
 
-### Local Testing
-
-For local installation and testing (files in `testing/` directory):
-
-```bash
-# Quick install for testing
-cd testing
-./install-for-testing.sh
-
-# Uninstall
-./uninstall.sh
-
-# See testing/TESTING.md for detailed testing guide
-# See testing/test-sample.md for test examples
-```
+See `testing/` directory for test files and scripts.
 
 ## Credits
 
-Ported from the Python project [cjk-text-formatter](https://github.com/xiaolai/cjk-text-formatter) by Xiaolai Li.
+Ported from [cjk-text-formatter](https://github.com/xiaolai/cjk-text-formatter) by Xiaolai Li.
 
 ## License
 
 MIT
-
-## Changelog
-
-### 1.0.0
-
-- Initial release
-- Full port from Python cjk-text-formatter
-- Support for 13 configurable formatting rules
-- Format document and format selection commands
-- Format on save option
-- Status bar integration

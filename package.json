@@ -34,6 +34,7 @@
   "activationEvents": [
     "onLanguage:markdown",
     "onLanguage:plaintext",
+    "onLanguage:restructuredtext",
     "onLanguage:html"
   ],
   "main": "./out/extension.js",
@@ -128,6 +129,23 @@
           "type": "boolean",
           "default": true,
           "description": "Show formatter status in status bar"
+        },
+        "cjkFormatter.supportedLanguages": {
+          "type": "array",
+          "default": ["markdown", "plaintext", "restructuredtext"],
+          "items": {
+            "type": "string",
+            "enum": [
+              "markdown",
+              "plaintext",
+              "restructuredtext",
+              "html",
+              "latex",
+              "asciidoc"
+            ]
+          },
+          "description": "File types where CJK formatter is active (status bar + format-on-save)",
+          "uniqueItems": true
         },
         "cjkFormatter.customRules": {
           "type": "array",
