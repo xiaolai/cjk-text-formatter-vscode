@@ -2,6 +2,15 @@
 
 All notable changes to the "CJK Text Formatter" extension will be documented in this file.
 
+## [1.0.2] - 2025-10-13
+
+### Fixed
+- Fixed space collapsing to preserve markdown list indentation
+- Replaced aggressive space collapsing pattern with sophisticated line-by-line processing
+- List items with multiple levels of indentation (nested lists) now maintain proper structure
+- Excessive spaces after list markers are normalized to single space
+- Regular paragraph space collapsing still works correctly
+
 ## [1.0.1] - 2025-10-13
 
 ### Changed

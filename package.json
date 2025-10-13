@@ -2,7 +2,7 @@
   "name": "cjk-formatter",
   "displayName": "CJK Text Formatter",
   "description": "Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "lixiaolai",
   "icon": "icon.png",
   "engines": {
