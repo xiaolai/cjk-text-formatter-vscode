@@ -2,7 +2,7 @@
   "name": "cjk-text-formatter",
   "displayName": "CJK Text Formatter",
   "description": "Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "publisher": "lixiaolai",
   "icon": "icon.png",
   "engines": {
@@ -94,6 +94,11 @@
           "type": "boolean",
           "default": true,
           "description": "Add spaces between CJK and English/numbers"
+        },
+        "cjkFormatter.rules.cjkParenthesisSpacing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add spaces between CJK and half-width ()"
         },
         "cjkFormatter.rules.fullwidthPunctuation": {
           "type": "boolean",

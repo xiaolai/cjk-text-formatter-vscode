@@ -30,6 +30,8 @@ const CURRENCY_SPACING_PATTERN = /([$¥€£₹]|USD|CNY|EUR|GBP)\s+(\d)/g;
 const SLASH_SPACING_PATTERN = /(?<![/:])\s*\/\s*(?!\/)/g;
 const TRAILING_SPACE_PATTERN = / +$/gm;
 const EXCESSIVE_NEWLINE_PATTERN = /\n{3,}/g;
+const CJK_OPENING_PAREN_PATTERN = new RegExp(`([${CJK_ALL}])\\(`, 'g');
+const CLOSING_PAREN_CJK_PATTERN = new RegExp(`\\)([${CJK_ALL}])`, 'g');
 
 // Custom rule interface
 export interface CustomRule {
@@ -48,6 +50,7 @@ export interface RuleConfig {
     quoteSpacing?: boolean;
     singleQuoteSpacing?: boolean;
     cjkEnglishSpacing?: boolean;
+    cjkParenthesisSpacing?: boolean;
     fullwidthPunctuation?: boolean;
     fullwidthParentheses?: boolean;
     fullwidthBrackets?: boolean;
@@ -262,6 +265,17 @@ function spaceBetween(text: string): string {
 }
 
 /**
+ * Add spaces between CJK characters and half-width parentheses
+ */
+function fixCJKParenthesisSpacing(text: string): string {
+    // Add space between CJK character and opening paren
+    text = text.replace(CJK_OPENING_PAREN_PATTERN, '$1 (');
+    // Add space between closing paren and CJK character
+    text = text.replace(CLOSING_PAREN_CJK_PATTERN, ') $1');
+    return text;
+}
+
+/**
  * Collapse multiple spaces while preserving markdown list indentation
  */
 function collapseSpaces(text: string): string {
@@ -331,6 +345,7 @@ export function formatText(text: string, config?: RuleConfig): string {
         quoteSpacing: true,
         singleQuoteSpacing: true,
         cjkEnglishSpacing: true,
+        cjkParenthesisSpacing: true,
         fullwidthPunctuation: true,
         fullwidthParentheses: true,
         fullwidthBrackets: false, // Off by default
@@ -380,6 +395,9 @@ export function formatText(text: string, config?: RuleConfig): string {
         // Spacing rules
         if (rules.cjkEnglishSpacing) {
             text = spaceBetween(text);
+        }
+        if (rules.cjkParenthesisSpacing) {
+            text = fixCJKParenthesisSpacing(text);
         }
         if (rules.currencySpacing) {
             text = fixCurrencySpacing(text);
