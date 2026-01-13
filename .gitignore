@@ -8,4 +8,4 @@ node_modules
 # Testing files (use for local testing only)
 testing/
 
-.claude/
+.claude/testing.md
