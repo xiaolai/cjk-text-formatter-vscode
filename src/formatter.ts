@@ -47,6 +47,7 @@ export interface RuleConfig {
     ellipsisNormalization?: boolean;
     dashConversion?: boolean;
     emdashSpacing?: boolean;
+    straightToCurlyQuotes?: boolean;
     quoteSpacing?: boolean;
     singleQuoteSpacing?: boolean;
     cjkEnglishSpacing?: boolean;
@@ -110,6 +111,43 @@ function fixEmdashSpacing(text: string): string {
         const rightSpace = (after === '（' || after === '《') ? '' : ' ';
         return `${before}${leftSpace}——${rightSpace}${after}`;
     });
+}
+
+/**
+ * Convert straight double quotes to curly quotes when surrounding CJK text
+ * Only converts when the quoted content contains at least one CJK character
+ * Example: "中文" → "中文", "English" stays unchanged
+ */
+function convertStraightDoubleQuotes(text: string): string {
+    // Pattern: "content" where content contains at least one CJK character
+    // U+201C: " (LEFT DOUBLE QUOTATION MARK)
+    // U+201D: " (RIGHT DOUBLE QUOTATION MARK)
+    const pattern = new RegExp(`"([^"]*[${CJK_ALL}][^"]*)"`, 'g');
+    return text.replace(pattern, '\u201c$1\u201d');
+}
+
+/**
+ * Convert straight single quotes to curly quotes when surrounding CJK text
+ * Only converts when the quoted content contains at least one CJK character
+ * Apostrophes in English words (don't, it's) are NOT affected because:
+ * - They don't form balanced quote pairs around CJK content
+ * Example: '中文' → '中文', don't stays unchanged
+ */
+function convertStraightSingleQuotes(text: string): string {
+    // Pattern: 'content' where content contains at least one CJK character
+    // U+2018: ' (LEFT SINGLE QUOTATION MARK)
+    // U+2019: ' (RIGHT SINGLE QUOTATION MARK)
+    const pattern = new RegExp(`'([^']*[${CJK_ALL}][^']*)'`, 'g');
+    return text.replace(pattern, '\u2018$1\u2019');
+}
+
+/**
+ * Convert straight quotes to curly quotes when surrounding CJK text
+ */
+function convertStraightToCurlyQuotes(text: string): string {
+    text = convertStraightDoubleQuotes(text);
+    text = convertStraightSingleQuotes(text);
+    return text;
 }
 
 /**
@@ -342,6 +380,7 @@ export function formatText(text: string, config?: RuleConfig): string {
         ellipsisNormalization: true,
         dashConversion: true,
         emdashSpacing: true,
+        straightToCurlyQuotes: true,
         quoteSpacing: true,
         singleQuoteSpacing: true,
         cjkEnglishSpacing: true,
@@ -384,6 +423,10 @@ export function formatText(text: string, config?: RuleConfig): string {
         }
         if (rules.emdashSpacing) {
             text = fixEmdashSpacing(text);
+        }
+        // Convert straight quotes to curly BEFORE applying spacing
+        if (rules.straightToCurlyQuotes) {
+            text = convertStraightToCurlyQuotes(text);
         }
         if (rules.quoteSpacing) {
             text = fixQuotes(text);

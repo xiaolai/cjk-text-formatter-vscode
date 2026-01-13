@@ -2,7 +2,7 @@
   "name": "cjk-text-formatter",
   "displayName": "CJK Text Formatter",
   "description": "Format CJK (Chinese, Japanese, Korean) and English mixed text with proper typography rules",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "publisher": "lixiaolai",
   "icon": "icon.png",
   "engines": {
@@ -79,6 +79,11 @@
           "type": "boolean",
           "default": true,
           "description": "Fix spacing around '——'"
+        },
+        "cjkFormatter.rules.straightToCurlyQuotes": {
+          "type": "boolean",
+          "default": true,
+          "description": "Convert straight quotes to curly quotes around CJK text (e.g., '中文' becomes curly-quoted)"
         },
         "cjkFormatter.rules.quoteSpacing": {
           "type": "boolean",

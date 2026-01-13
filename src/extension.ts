@@ -21,6 +21,7 @@ function getFormatterConfig(): RuleConfig {
         ellipsisNormalization: rulesConfig.get('ellipsisNormalization', true),
         dashConversion: rulesConfig.get('dashConversion', true),
         emdashSpacing: rulesConfig.get('emdashSpacing', true),
+        straightToCurlyQuotes: rulesConfig.get('straightToCurlyQuotes', true),
         quoteSpacing: rulesConfig.get('quoteSpacing', true),
         singleQuoteSpacing: rulesConfig.get('singleQuoteSpacing', true),
         cjkEnglishSpacing: rulesConfig.get('cjkEnglishSpacing', true),
